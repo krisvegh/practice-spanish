@@ -1,5 +1,4 @@
-import zip from "lodash.zip";
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 
 interface SolutionIndicatorProps {
   solutions: string[];
@@ -12,21 +11,33 @@ const SolutionIndicator: FC<SolutionIndicatorProps> = ({
   input,
   firstUnknownIndex,
 }) => {
-  const getColor = (chars: (string | undefined)[], index: number): string => {
+  const [predictedSolution, setPredictedSolution] = useState(
+    solutions[0] || ""
+  );
+
+  useEffect(() => {
+    const likely = solutions.find((solution) => solution.includes(input));
+    if (likely && likely !== predictedSolution) {
+      setPredictedSolution(likely);
+    }
+  }, [input, predictedSolution, solutions]);
+
+  const getColor = (char: string, index: number): string => {
+    if (char === " ") return "transparent";
     if (input[index] === undefined) return "grey";
-    if (chars.includes(input[index])) return "#00e100";
+    if (char === input[index]) return "#00e100";
     return "red";
   };
 
-  const zippedSolutions = zip(...solutions.map((s) => s.split("")));
-
-  const dots = zippedSolutions.map((chars, i) => {
-    const color = getColor(chars, i);
+  const dots = predictedSolution.split("").map((letter, i) => {
+    const color = getColor(letter, i);
     return color;
   });
 
   useEffect(() => {
-    const unknowsCharIndex = dots.findIndex((color) => color !== "#00e100");
+    const unknowsCharIndex = dots.findIndex(
+      (color) => color === "grey" || color === "red"
+    );
     firstUnknownIndex(unknowsCharIndex);
   }, [dots, firstUnknownIndex]);
 

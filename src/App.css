@@ -76,7 +76,7 @@ html, body {
   width: 75vw;
   display: flex;
   justify-content: center;
-  height: 30px;
+  height: 40px;
   align-items: center;
 }
 
@@ -102,4 +102,8 @@ html, body {
   margin: 0;
   margin-bottom: 10px;
   color: #848282;
+}
+
+.pointer {
+  cursor: pointer
 }

@@ -136,7 +136,7 @@ function App() {
     <div className="App">
       <div className="info">
         <p>{`Remaining words: ${currentDictionary.length}`}</p>
-        <p>{`Lifelined user: ${lifelinesUsed}`}</p>
+        <p>{`Lifeline used: ${lifelinesUsed}`}</p>
       </div>
       <p className="english">{currentWord?.english}</p>
       <input
@@ -145,6 +145,7 @@ function App() {
         className="input-field"
         type="text"
         value={inputValue}
+        spellCheck={false}
         onChange={(e) => inputChangeHandler(e.target.value)}
         onBeforeInput={beforeInputHandler}
       />
@@ -163,8 +164,12 @@ function App() {
         <button className="button ml">ú (5)</button>
         <button className="button ml">ñ (6)</button>
         <div className="spacer"></div>
-        <button className="button ml">Show next letter (9)</button>
-        <button className="button ml">Show solution (8)</button>
+        <button onClick={revealNextLetter} className="button ml pointer">
+          Show next letter (9)
+        </button>
+        <button onClick={revealAnswer} className="button ml pointer">
+          Show solution (8)
+        </button>
       </div>
     </div>
   );
