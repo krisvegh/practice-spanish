@@ -39,16 +39,18 @@ function App() {
   const [firstUnknownIndex, setfirstUnknownIndex] = useState(0);
 
   const success = () => {
-    const newDictionary = currentDictionary.filter(
-      (word) => word.english !== currentWord?.english
-    );
-    if (newDictionary.length === 0) {
-      console.log("CONGRATS");
-      return;
+    if (!lifelinesUsed) {
+      const newDictionary = currentDictionary.filter(
+        (word) => word.english !== currentWord?.english
+      );
+      if (newDictionary.length === 0) {
+        console.log("CONGRATS");
+        return;
+      }
+      setCurrentDictionary(newDictionary);
     }
     ding.current.play();
     setTimeout(() => {
-      setCurrentDictionary(newDictionary);
       setNextWord();
     }, 1000);
   };
@@ -64,18 +66,19 @@ function App() {
     const letter = currentWord.spanish[0][firstUnknownIndex];
     const newWord = `${inputValue.slice(0, firstUnknownIndex)}${letter}`;
     inputChangeHandler(newWord);
-    setLifelinesUsed((prev) => {
-      if (!lifelinesUsedInThisRound) {
-        return ++prev;
-      }
-      return prev;
-    });
-    setlifelinesUsedInThisRound(true);
+    lifeLine();
+  };
+
+  const lifeLine = () => {
+    if (!lifelinesUsedInThisRound) {
+      setLifelinesUsed((prev) => ++prev);
+      setlifelinesUsedInThisRound(true);
+    }
   };
 
   const revealAnswer = () => {
     setInputValue(currentWord.spanish.join(","));
-    setLifelinesUsed((prev) => ++prev);
+    lifeLine();
     setTimeout(() => {
       setNextWord();
     }, 3000);
