@@ -1,38 +1,105 @@
+html, body {
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+}
+
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
-  flex-direction: column;
+  flex-Direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-.App-link {
-  color: #61dafb;
+.english {
+  font-size: 48px;
+  color: #848282;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.input-field {
+  font-size: 40px;
+  text-align: center;
+  font-weight: 200;
+  font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  padding: 15px;
+  border-radius: 15px;
+  border-width: 1px;
+  width: 75vw;
+  outline: none;
+  box-sizing: border-box;
+  border-color: #8b8b8b;
+  color: #8b8b8b;
+  transition: backgroundColor .1s;
+}
+
+.input-field:focus {
+  border: 1px solid #444;
+}
+
+
+.button-row {
+  width: 75vw;
+  display: flex;
+  justify-content: flex-start;
+  height: 50px;
+}
+
+.button {
+  height: 30px;
+  background-color: white;
+  border: 1px solid #cbc7c7;
+  border-radius: 5px;
+  color: #949494;
+  outline: none;
+}
+
+.ml {
+  margin-left: 10px;
+}
+
+.spacer {
+  flex-grow: 1;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.indicator-row {
+  width: 75vw;
+  display: flex;
+  justify-content: center;
+  height: 30px;
+  align-items: center;
+}
+
+.solution-indicator {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  margin: 0px 5px;
+}
+
+.info {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 26px;
+  font-weight: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.info p {
+  margin: 0;
+  margin-bottom: 10px;
+  color: #848282;
 }
