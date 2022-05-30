@@ -64,6 +64,7 @@ function App() {
 
   const revealNextLetter = () => {
     const letter = currentWord.spanish[0][firstUnknownIndex];
+    if (!letter) return;
     const newWord = `${inputValue.slice(0, firstUnknownIndex)}${letter}`;
     inputChangeHandler(newWord);
     lifeLine();
