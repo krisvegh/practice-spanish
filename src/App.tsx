@@ -39,7 +39,7 @@ function App() {
   const [firstUnknownIndex, setfirstUnknownIndex] = useState(0);
 
   const success = () => {
-    if (!lifelinesUsed) {
+    if (!lifelinesUsedInThisRound) {
       const newDictionary = currentDictionary.filter(
         (word) => word.english !== currentWord?.english
       );
@@ -129,7 +129,8 @@ function App() {
   // On game start, set first word
   useEffect(() => {
     setNextWord();
-  }, [setNextWord]);
+    //eslint-disable-next-line
+  }, []);
 
   return (
     <div className="App">
