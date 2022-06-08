@@ -73,11 +73,11 @@ const phrases: Phrase[] = [
     english: `have you been to london`,
   },
   {
-    spanish: [`Málaga hace mucho calor en agosto`],
+    spanish: [`málaga hace mucho calor en agosto`],
     english: `Malaga is very hot in August`,
   },
   {
-    spanish: [`No necesitaré un abrigo en este país`],
+    spanish: [`no necesitaré un abrigo en este país`],
     english: `I won't need a coat in this country`,
   },
   {

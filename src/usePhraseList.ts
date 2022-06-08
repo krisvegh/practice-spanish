@@ -17,7 +17,22 @@ const ignoredESWords = [
   "a",
   "del",
 ];
-const ignoredENWords = ["/", "a", "to", "the", "sth", "go"];
+const ignoredENWords = [
+  "/",
+  "a",
+  "to",
+  "the",
+  "sth",
+  "go",
+  "in",
+  "is",
+  "he",
+  "on",
+  "for",
+  "of",
+  "are",
+  "don't",
+];
 
 const usePhraseList = (currentWord: Word) => {
   const { spanish, english } = currentWord;
