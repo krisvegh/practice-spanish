@@ -1,9 +1,11 @@
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import "./App.css";
 import dictionary, { Dictionary, initWord, Word } from "./dictionary";
+import { Phrase } from "./phrases";
 import SolutionIndicator from "./SolutionIndicator";
+import { usePhraseList } from "./usePhraseList";
 
-function randomIntFromInterval(min: number, max: number) {
+export function randomIntFromInterval(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
@@ -22,43 +24,71 @@ function editText(
 function App() {
   const ding = useRef(new Audio("./ding.mp3"));
   const [inputValue, setInputValue] = useState("");
-  const [currentWord, setCurrentWord] = useState<Word>(initWord);
+  const [currentWord, setCurrentWord] = useState<Word | Phrase>(initWord);
   const [currentDictionary, setCurrentDictionary] =
     useState<Dictionary>(dictionary);
   const [lifelinesUsed, setLifelinesUsed] = useState(0);
   const [lifelinesUsedInThisRound, setlifelinesUsedInThisRound] =
     useState(false);
+  const [phraseList, setPhraseList] = useState<Phrase[]>([]);
+  const [isPhrase, setIsPhrase] = useState(false);
 
-  const setNextWord = useCallback(() => {
-    const nextIndex = randomIntFromInterval(0, currentDictionary.length - 1);
-    setCurrentWord(currentDictionary[nextIndex]);
+  const phrase = usePhraseList(currentWord);
+
+  const reset = () => {
     setInputValue("");
     setlifelinesUsedInThisRound(false);
-  }, [currentDictionary]);
+  };
+
+  const showNewWord = useCallback(() => {
+    if (phraseList.length && !isPhrase) {
+      const phraseIndex = randomIntFromInterval(0, phraseList.length - 1);
+      setCurrentWord(phraseList[phraseIndex]);
+      setIsPhrase(true);
+      reset();
+      return;
+    }
+    const nextIndex = randomIntFromInterval(0, currentDictionary.length - 1);
+    setCurrentWord(currentDictionary[nextIndex]);
+    setIsPhrase(false);
+    reset();
+  }, [currentDictionary, isPhrase, phraseList]);
 
   const [firstUnknownIndex, setfirstUnknownIndex] = useState(0);
 
-  const success = () => {
+  const win = () => {
+    console.log("CONGRATS");
+  };
+
+  const nextRound = (forceUsedLifelines = false) => {
     if (!lifelinesUsedInThisRound) {
       const newDictionary = currentDictionary.filter(
         (word) => word.english !== currentWord?.english
       );
       if (newDictionary.length === 0) {
-        console.log("CONGRATS");
+        win();
         return;
       }
       setCurrentDictionary(newDictionary);
+      setPhraseList((oldList) =>
+        oldList.filter((phrase) => phrase.english !== currentWord.english)
+      );
+    }
+    if (lifelinesUsedInThisRound || forceUsedLifelines) {
+      if (phrase) {
+        setPhraseList((oldState) => [...oldState, phrase]);
+      }
     }
     ding.current.play();
     setTimeout(() => {
-      setNextWord();
+      showNewWord();
     }, 1000);
   };
 
   const inputChangeHandler = (value: string) => {
     setInputValue(value);
     if (currentWord.spanish.includes(value)) {
-      success();
+      nextRound();
     }
   };
 
@@ -81,8 +111,8 @@ function App() {
     setInputValue(currentWord.spanish.join(","));
     lifeLine();
     setTimeout(() => {
-      setNextWord();
-    }, 3000);
+      nextRound(true);
+    }, 2000);
   };
 
   function beforeInputHandler(e: FormEvent<HTMLInputElement>) {
@@ -129,7 +159,7 @@ function App() {
 
   // On game start, set first word
   useEffect(() => {
-    setNextWord();
+    showNewWord();
     //eslint-disable-next-line
   }, []);
 
