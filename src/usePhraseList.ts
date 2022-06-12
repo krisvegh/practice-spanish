@@ -32,6 +32,9 @@ const ignoredENWords = [
   "of",
   "are",
   "don't",
+  "had",
+  "by",
+  "you",
 ];
 
 const usePhraseList = (currentWord: Word) => {

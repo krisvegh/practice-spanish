@@ -69,7 +69,7 @@ const phrases: Phrase[] = [
     english: `My pillow is too soft`,
   },
   {
-    spanish: [`has estado en Londres`],
+    spanish: [`has estado en londres`],
     english: `have you been to london`,
   },
   {

@@ -42,8 +42,8 @@ function App() {
 
   const showNewWord = useCallback(() => {
     if (phraseList.length && !isPhrase) {
-      const phraseIndex = randomIntFromInterval(0, phraseList.length - 1);
-      setCurrentWord(phraseList[phraseIndex]);
+      // const phraseIndex = randomIntFromInterval(0, phraseList.length - 1); // pick random phrase
+      setCurrentWord(phraseList[0]);
       setIsPhrase(true);
       reset();
       return;
@@ -166,7 +166,7 @@ function App() {
   return (
     <div className="App">
       <div className="info">
-        <p>{`Remaining words: ${currentDictionary.length}`}</p>
+        <p>{`Remaining words: ${currentDictionary.length}/${dictionary.length}`}</p>
         <p>{`Lifeline used: ${lifelinesUsed}`}</p>
       </div>
       <p className="english">{currentWord?.english}</p>

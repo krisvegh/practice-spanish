@@ -267,7 +267,7 @@ const dictionary: Dictionary = [
   { spanish: ["izquierda"], english: "left" },
   { spanish: ["derecha"], english: "right" },
   { spanish: ["blanda"], english: "soft" },
-  { spanish: ["has estado"], english: "have you beed" },
+  { spanish: ["has estado"], english: "have you been" },
   { spanish: ["un poco"], english: "a little" },
   { spanish: ["semana pasada"], english: "last week" },
   { spanish: ["llegar"], english: "get (to), reach, arrive" },
