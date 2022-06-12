@@ -169,7 +169,15 @@ function App() {
         <p>{`Remaining words: ${currentDictionary.length}/${dictionary.length}`}</p>
         <p>{`Lifeline used: ${lifelinesUsed}`}</p>
       </div>
-      <p className="english">{currentWord?.english}</p>
+      <p className="english">
+        {currentWord?.english.split(" ").map((word) => (
+          <a
+            href={`https://www.spanishdict.com/conjugate/${word}`}
+            target="_blank"
+            rel="noreferrer"
+          >{`${word} `}</a>
+        ))}
+      </p>
       <input
         tabIndex={0}
         autoFocus

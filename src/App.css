@@ -21,6 +21,11 @@ html, body {
   color: #848282;
 }
 
+.english a {
+  text-decoration: inherit;
+  color: inherit;
+}
+
 .input-field {
   font-size: 40px;
   text-align: center;
