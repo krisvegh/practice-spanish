@@ -285,6 +285,12 @@ const dictionary: Dictionary = [
   { spanish: ["cochina", "cochino"], english: "filthy / dirty" },
   { spanish: ["sucio"], english: "dirty" },
   { spanish: ["ocupada", "ocupado"], english: "busy" },
+  { spanish: ["desde"], english: "since / from" },
+  { spanish: ["desde luego"], english: "of course" },
+  { spanish: ["desde hace tres años"], english: "for three years" },
+  { spanish: ["hacia"], english: "toward / around" },
+  { spanish: ["hace"], english: "ago" },
+  { spanish: ["doler"], english: "to hurt" },
 ];
 
 export default dictionary;

@@ -49,7 +49,7 @@ const phrases: Phrase[] = [
     keywords: ["asado"],
   },
   {
-    spanish: [`jaun es muy guapo`],
+    spanish: [`juan es muy guapo`],
     english: `Juan is very handsome`,
   },
   {
@@ -142,7 +142,7 @@ const phrases: Phrase[] = [
   },
   {
     spanish: [`preparar el cuchillo, el tenedor y la cuchara`],
-    english: `prepare the knife, fork and soon`,
+    english: `prepare the knife fork and spoon`,
   },
   {
     spanish: [`pones el plato en la mesa`],
@@ -337,6 +337,22 @@ const phrases: Phrase[] = [
   {
     spanish: [`Martina es baja`],
     english: `Martina is short`,
+  },
+  {
+    spanish: [`vengo desde puerto rico`],
+    english: `I come from Puerto Rico`,
+  },
+  {
+    spanish: [`no lo había visto desde la reunión`],
+    english: `I have not seen him since the meeting`,
+  },
+  {
+    spanish: [`desde hoy no voy a beber alcohol`],
+    english: `from now on, I am not going to drink alcohol`,
+  },
+  {
+    spanish: [`me gradué hace un año`],
+    english: `I graduated one year ago`,
   },
 ];
 

@@ -68,7 +68,6 @@ const usePhraseList = (currentWord: Word) => {
   }, [ENKeywords, ESKeywords]);
 
   if (relatedPhrases.length === 0) return null;
-  console.log(relatedPhrases);
   const phraseIndex = randomIntFromInterval(0, relatedPhrases.length - 1);
   return relatedPhrases[phraseIndex];
 };
