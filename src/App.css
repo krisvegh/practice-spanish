@@ -1,5 +1,6 @@
 html, body {
   height: 100%;
+  color: #848282;
 }
 
 #root {
@@ -111,4 +112,53 @@ html, body {
 
 .pointer {
   cursor: pointer
+}
+
+.settings-button {
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  color: #848282;
+  cursor: pointer;
+}
+
+.settings {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100vh;
+  transform: translate(-250px, 0px);
+  padding: 20px;
+  transition: transform .2s;
+  box-shadow: -8px 0px 10px #e5e5e5 inset;
+  box-sizing: border-box;
+}
+
+.settings.open {
+  width: 250px;
+  background-color: #ececec;
+  transform: translate(0px, 0px);
+}
+
+.disabled {
+  filter: opacity(.5);
+  pointer-events: none;
+}
+
+.meta {
+  width: 75vw;
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 5px;
+
+}
+
+.meta .left-side {
+  justify-items: flex-start;
+}
+
+.meta .right-side {
+  justify-items: flex-end;
 }

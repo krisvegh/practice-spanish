@@ -2,26 +2,27 @@ export interface Phrase {
   english: string;
   spanish: string[];
   keywords?: string[];
+  meta?: undefined;
 }
 
 const phrases: Phrase[] = [
   {
-    spanish: ["ya es hora de empezar el examen"],
+    spanish: ['ya es hora de empezar el examen'],
     english: `It's time to start the exam now.`,
   },
   {
-    spanish: ["se quien es juan"],
+    spanish: ['se quien es juan'],
     english: `I know who Juan is`,
   },
   {
-    spanish: ["mi perro es moreno"],
+    spanish: ['mi perro es moreno'],
     english: `my dog is brown`,
-    keywords: ["marrón"],
+    keywords: ['marrón'],
   },
   {
-    spanish: ["cuantos carros tiene"],
+    spanish: ['cuantos carros tiene'],
     english: `how many cars does he have`,
-    keywords: ["cuántos"],
+    keywords: ['cuántos'],
   },
   {
     spanish: [`el baño está a la derecha`],
@@ -46,7 +47,7 @@ const phrases: Phrase[] = [
   {
     spanish: [`me gusta la carne asada`],
     english: `I like roasted meat`,
-    keywords: ["asado"],
+    keywords: ['asado'],
   },
   {
     spanish: [`juan es muy guapo`],
@@ -195,7 +196,7 @@ const phrases: Phrase[] = [
   {
     spanish: [`puedes traerme mi teléfono`],
     english: `can you bring me my phone?`,
-    keywords: ["traer"],
+    keywords: ['traer'],
   },
   {
     spanish: [`juan tenia un traje amarillo`],
@@ -244,12 +245,12 @@ const phrases: Phrase[] = [
   {
     spanish: [`rompió el vaso por accidente`],
     english: `He broke the glass by accident`,
-    keywords: ["romper"],
+    keywords: ['romper'],
   },
   {
     spanish: [`corrí a casa`],
     english: `I ran home`,
-    keywords: ["correr"],
+    keywords: ['correr'],
   },
 
   {
@@ -315,12 +316,12 @@ const phrases: Phrase[] = [
   {
     spanish: [`lleva los platos sucios a la cocina`],
     english: `take the dirty plates to the kitchen`,
-    keywords: ["llevar", "plato"],
+    keywords: ['llevar', 'plato'],
   },
   {
     spanish: [`no juegues con mi corazón`],
     english: `Don't play with my heart.`,
-    keywords: ["jugar"],
+    keywords: ['jugar'],
   },
   {
     spanish: [`mis parientes viven en polonia`],

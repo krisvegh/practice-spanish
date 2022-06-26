@@ -1,9 +1,12 @@
-import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
-import "./App.css";
-import dictionary, { Dictionary, initWord, Word } from "./dictionary";
-import { Phrase } from "./phrases";
-import SolutionIndicator from "./SolutionIndicator";
-import { usePhraseList } from "./usePhraseList";
+import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
+import './App.css';
+import { Dictionary, getWordlist, initWord, Word } from './dictionary';
+import MetaDisplay from './MetaDisplay';
+import { Phrase } from './phrases';
+import Settings, { SettingsParams } from './Settings';
+import SolutionIndicator from './SolutionIndicator';
+import { usePhraseList } from './usePhraseList';
+import { useVerbs } from './useVerbs';
 
 export function randomIntFromInterval(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -22,54 +25,89 @@ function editText(
 }
 
 function App() {
-  const ding = useRef(new Audio("./ding.mp3"));
-  const [inputValue, setInputValue] = useState("");
+  const ding = useRef(new Audio('./ding.mp3'));
+  const [inputValue, setInputValue] = useState('');
   const [currentWord, setCurrentWord] = useState<Word | Phrase>(initWord);
-  const [currentDictionary, setCurrentDictionary] =
-    useState<Dictionary>(dictionary);
+  const [currentWordList, setCurrentWordList] = useState<Dictionary>(
+    getWordlist(50)
+  );
   const [lifelinesUsed, setLifelinesUsed] = useState(0);
   const [lifelinesUsedInThisRound, setlifelinesUsedInThisRound] =
     useState(false);
   const [phraseList, setPhraseList] = useState<Phrase[]>([]);
   const [isPhrase, setIsPhrase] = useState(false);
+  const [isSettingsDrawerOpen, setIsSettingsDrawerOpen] = useState(false);
+  const [settings, setSettings] = useState<SettingsParams>({
+    mode: 'word',
+    mood: 'Indicative',
+    tenses: ['Present'],
+    wordLimit: 50,
+  });
+  const { getVerbList } = useVerbs();
 
   const phrase = usePhraseList(currentWord);
 
-  const reset = () => {
-    setInputValue("");
+  const resetRound = () => {
+    setInputValue('');
     setlifelinesUsedInThisRound(false);
   };
 
-  const showNewWord = useCallback(() => {
-    if (phraseList.length && !isPhrase) {
-      // const phraseIndex = randomIntFromInterval(0, phraseList.length - 1); // pick random phrase
-      setCurrentWord(phraseList[0]);
-      setIsPhrase(true);
-      reset();
-      return;
-    }
-    const nextIndex = randomIntFromInterval(0, currentDictionary.length - 1);
-    setCurrentWord(currentDictionary[nextIndex]);
-    setIsPhrase(false);
-    reset();
-  }, [currentDictionary, isPhrase, phraseList]);
+  const showNewWord = useCallback(
+    (forceWordList?: Word[]) => {
+      if (phraseList.length && !isPhrase && settings.mode === 'word') {
+        setCurrentWord(phraseList[0]);
+        setIsPhrase(true);
+        resetRound();
+        return;
+      }
+      const list = forceWordList || currentWordList;
+      const nextIndex = randomIntFromInterval(0, list.length - 1);
+      setCurrentWord(list[nextIndex]);
+      setIsPhrase(false);
+      resetRound();
+    },
+    [currentWordList, isPhrase, phraseList, settings.mode]
+  );
+
+  const resetGame = useCallback(
+    (forceWordList?: Word[]) => {
+      resetRound();
+      setLifelinesUsed(0);
+      setPhraseList([]);
+      setIsPhrase(false);
+      showNewWord(forceWordList);
+    },
+    [showNewWord]
+  );
+
+  const onSettingsChanged = useCallback(
+    (newSettings: SettingsParams) => {
+      setSettings(newSettings);
+      const { mode, wordLimit } = newSettings;
+      const newWordList =
+        mode === 'word' ? getWordlist(wordLimit) : getVerbList(newSettings);
+      setCurrentWordList(newWordList);
+      resetGame(newWordList);
+    },
+    [getVerbList, resetGame]
+  );
 
   const [firstUnknownIndex, setfirstUnknownIndex] = useState(0);
 
   const win = () => {
-    console.log("CONGRATS");
+    console.log('CONGRATS');
   };
 
-  const nextRound = (forceUsedLifelines = false) => {
+  const roundCompleted = (forceUsedLifelines = false) => {
     if (!lifelinesUsedInThisRound) {
-      const newDictionary = currentDictionary.filter(
+      const newWordList = currentWordList.filter(
         (word) => word.english !== currentWord?.english
       );
-      if (newDictionary.length === 0) {
+      if (newWordList.length === 0) {
         win();
         return;
       }
-      setCurrentDictionary(newDictionary);
+      setCurrentWordList(newWordList);
       setPhraseList((oldList) =>
         oldList.filter((phrase) => phrase.english !== currentWord.english)
       );
@@ -88,7 +126,7 @@ function App() {
   const inputChangeHandler = (value: string) => {
     setInputValue(value);
     if (currentWord.spanish.includes(value)) {
-      nextRound();
+      roundCompleted();
     }
   };
 
@@ -108,11 +146,15 @@ function App() {
   };
 
   const revealAnswer = () => {
-    setInputValue(currentWord.spanish.join(","));
+    setInputValue(currentWord.spanish.join(','));
     lifeLine();
     setTimeout(() => {
-      nextRound(true);
+      roundCompleted(true);
     }, 2000);
+  };
+
+  const toggleDrawer = () => {
+    setIsSettingsDrawerOpen((state) => !state);
   };
 
   function beforeInputHandler(e: FormEvent<HTMLInputElement>) {
@@ -120,35 +162,35 @@ function App() {
     const end = (e.target as any).selectionEnd;
     let char = (e as any).data;
     switch (char) {
-      case "1":
+      case '1':
         e.preventDefault();
-        inputChangeHandler(editText(inputValue, "á", start, end));
+        inputChangeHandler(editText(inputValue, 'á', start, end));
         return;
-      case "2":
+      case '2':
         e.preventDefault();
-        inputChangeHandler(editText(inputValue, "é", start, end));
+        inputChangeHandler(editText(inputValue, 'é', start, end));
         return;
-      case "3":
+      case '3':
         e.preventDefault();
-        inputChangeHandler(editText(inputValue, "í", start, end));
+        inputChangeHandler(editText(inputValue, 'í', start, end));
         return;
-      case "4":
+      case '4':
         e.preventDefault();
-        inputChangeHandler(editText(inputValue, "ó", start, end));
+        inputChangeHandler(editText(inputValue, 'ó', start, end));
         return;
-      case "5":
+      case '5':
         e.preventDefault();
-        inputChangeHandler(editText(inputValue, "ú", start, end));
+        inputChangeHandler(editText(inputValue, 'ú', start, end));
         return;
-      case "6":
+      case '6':
         e.preventDefault();
-        inputChangeHandler(editText(inputValue, "ñ", start, end));
+        inputChangeHandler(editText(inputValue, 'ñ', start, end));
         return;
-      case "9":
+      case '9':
         e.preventDefault();
         revealNextLetter();
         return;
-      case "8":
+      case '8':
         e.preventDefault();
         revealAnswer();
         return;
@@ -164,53 +206,64 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
-      <div className="info">
-        <p>{`Remaining words: ${currentDictionary.length}/${dictionary.length}`}</p>
-        <p>{`Lifeline used: ${lifelinesUsed}`}</p>
-      </div>
-      <p className="english">
-        {currentWord?.english.split(" ").map((word) => (
-          <a
-            href={`https://www.spanishdict.com/conjugate/${word}`}
-            target="_blank"
-            rel="noreferrer"
-          >{`${word} `}</a>
-        ))}
-      </p>
-      <input
-        tabIndex={0}
-        autoFocus
-        className="input-field"
-        type="text"
-        value={inputValue}
-        spellCheck={false}
-        onChange={(e) => inputChangeHandler(e.target.value)}
-        onBeforeInput={beforeInputHandler}
-      />
-      <div className="indicator-row">
-        <SolutionIndicator
-          solutions={currentWord.spanish}
-          input={inputValue}
-          firstUnknownIndex={setfirstUnknownIndex}
+    <>
+      <Settings
+        isOpen={isSettingsDrawerOpen}
+        onChange={onSettingsChanged}
+      ></Settings>
+      <div className="App">
+        <p className="settings-button" onClick={toggleDrawer}>
+          {isSettingsDrawerOpen ? 'Close' : 'Settings'}
+        </p>
+        <div className="info">
+          <p>{`Remaining words: ${currentWordList.length}/${settings.wordLimit}`}</p>
+          <p>{`Lifeline used: ${lifelinesUsed}`}</p>
+        </div>
+        <p className="english">
+          {currentWord?.english.split(' ').map((word, i) => (
+            <a
+              key={i}
+              href={`https://www.spanishdict.com/conjugate/${word}`}
+              target="_blank"
+              rel="noreferrer"
+            >{`${word} `}</a>
+          ))}
+        </p>
+        <MetaDisplay settings={settings} verb={currentWord.meta} />
+        <input
+          tabIndex={0}
+          autoFocus
+          className="input-field"
+          type="text"
+          value={inputValue}
+          spellCheck={false}
+          onChange={(e) => inputChangeHandler(e.target.value)}
+          onBeforeInput={beforeInputHandler}
         />
+        <div className="indicator-row">
+          <SolutionIndicator
+            solutions={currentWord.spanish}
+            input={inputValue}
+            firstUnknownIndex={setfirstUnknownIndex}
+          />
+        </div>
+        <div className="button-row">
+          <button className="button">á (1)</button>
+          <button className="button ml">é (2)</button>
+          <button className="button ml">í (3)</button>
+          <button className="button ml">ó (4)</button>
+          <button className="button ml">ú (5)</button>
+          <button className="button ml">ñ (6)</button>
+          <div className="spacer"></div>
+          <button onClick={revealNextLetter} className="button ml pointer">
+            Show next letter (9)
+          </button>
+          <button onClick={revealAnswer} className="button ml pointer">
+            Show solution (8)
+          </button>
+        </div>
       </div>
-      <div className="button-row">
-        <button className="button">á (1)</button>
-        <button className="button ml">é (2)</button>
-        <button className="button ml">í (3)</button>
-        <button className="button ml">ó (4)</button>
-        <button className="button ml">ú (5)</button>
-        <button className="button ml">ñ (6)</button>
-        <div className="spacer"></div>
-        <button onClick={revealNextLetter} className="button ml pointer">
-          Show next letter (9)
-        </button>
-        <button onClick={revealAnswer} className="button ml pointer">
-          Show solution (8)
-        </button>
-      </div>
-    </div>
+    </>
   );
 }
 
