@@ -8,6 +8,7 @@ export interface SettingsParams {
   mood: Mood;
   tenses: Tense[];
   wordLimit: number;
+  phraseEnabled: boolean;
 }
 
 interface Props {
@@ -20,31 +21,39 @@ const Settings: FC<Props> = ({ isOpen, onChange }) => {
   const [mood, setMood] = useState<Mood>('Indicative');
   const [tenses, setTenses] = useState<Tense[]>(['Present']);
   const [wordLimit, setWordLimit] = useState(50);
+  const [phraseEnabled, setphraseEnabled] = useState(true);
 
   const modeChangeHandler = (mode: Modes) => {
     setMode(mode);
-    onChange && onChange({ mode, mood, tenses, wordLimit });
+    onChange && onChange({ mode, mood, tenses, wordLimit, phraseEnabled });
   };
 
   const moodChangeHandler = (mood: Mood) => {
     setMood(mood);
-    onChange && onChange({ mode, mood, tenses, wordLimit });
+    onChange && onChange({ mode, mood, tenses, wordLimit, phraseEnabled });
   };
 
   const wordLimitChangeHandler = (wordLimit: number) => {
     setWordLimit(wordLimit);
-    onChange && onChange({ mode, mood, tenses, wordLimit });
+    onChange && onChange({ mode, mood, tenses, wordLimit, phraseEnabled });
+  };
+
+  const phraseSettingHandler = (isEnabled: boolean) => {
+    setphraseEnabled(isEnabled);
+    onChange && onChange({ mode, mood, tenses, wordLimit, phraseEnabled });
   };
 
   const toggleTense = (tense: Tense) => {
     setTenses((oldTenses) => {
       if (oldTenses.includes(tense)) {
         const newTenses = oldTenses.filter((t) => t !== tense);
-        onChange && onChange({ mood, mode, wordLimit, tenses: newTenses });
+        onChange &&
+          onChange({ mood, mode, wordLimit, tenses: newTenses, phraseEnabled });
         return newTenses;
       }
       const newTenses = [...oldTenses, tense];
-      onChange && onChange({ mood, mode, wordLimit, tenses: newTenses });
+      onChange &&
+        onChange({ mood, mode, wordLimit, tenses: newTenses, phraseEnabled });
       return newTenses;
     });
   };
@@ -79,6 +88,17 @@ const Settings: FC<Props> = ({ isOpen, onChange }) => {
           value={wordLimit}
           onChange={(e) => wordLimitChangeHandler(Number(e.target.value))}
         />
+      </div>
+      <div style={{ marginTop: '15px' }}>
+        <input
+          onChange={(e) => phraseSettingHandler(e.target.checked)}
+          id="check-phrase"
+          type="checkbox"
+          name="mood"
+          value="Indicative"
+          defaultChecked
+        />
+        <label htmlFor="check-phrase">Enable phrases</label>
       </div>
       <div
         className={mode === 'verbs' ? '' : 'disabled'}

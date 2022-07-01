@@ -12,7 +12,7 @@ export type Tense =
   | 'Imperfect'
   | 'Preterite'
   | 'Conditional'
-  | 'Present Perfet'
+  | 'Present Perfect'
   | 'Future Perfect'
   | 'Past Perfect'
   | 'Preterite (Archaic)'
@@ -24,7 +24,7 @@ export const allTenses: Tense[] = [
   'Imperfect',
   'Preterite',
   'Conditional',
-  'Present Perfet',
+  'Present Perfect',
   'Future Perfect',
   'Past Perfect',
   'Preterite (Archaic)',

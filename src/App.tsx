@@ -42,6 +42,7 @@ function App() {
     mood: 'Indicative',
     tenses: ['Present'],
     wordLimit: 50,
+    phraseEnabled: true,
   });
   const { getVerbList } = useVerbs();
 
@@ -112,7 +113,10 @@ function App() {
         oldList.filter((phrase) => phrase.english !== currentWord.english)
       );
     }
-    if (lifelinesUsedInThisRound || forceUsedLifelines) {
+    if (
+      (lifelinesUsedInThisRound || forceUsedLifelines) &&
+      settings.phraseEnabled
+    ) {
       if (phrase) {
         setPhraseList((oldState) => [...oldState, phrase]);
       }
