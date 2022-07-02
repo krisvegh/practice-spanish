@@ -1,13 +1,16 @@
 import { Verb } from './useVerbs';
 
-export const getEnglishVerb = ({ verb_english }: Verb, person: string) => {
+export const getEnglishVerb = (
+  { verb_english, tense_english }: Verb,
+  person: string
+) => {
   switch (person) {
     case 'form_1s':
       return verb_english;
     case 'form_2s':
       return convert2s(verb_english);
     case 'form_3s':
-      return convert3s(verb_english);
+      return convert3s(verb_english, tense_english);
     case 'form_1p':
       return convert1p(verb_english);
     case 'form_2p':
@@ -26,11 +29,14 @@ function convert2s(verb: string) {
     .replaceAll(' am ', ' are ');
 }
 
-function convert3s(verb: string) {
+function convert3s(verb: string, tense: string) {
   return verb
     .replace('I ', 'He ')
     .replaceAll(' am ', ' is ')
-    .replace(/(?<=\bHe\s)(\w+)/, (w) => `${w}s`);
+    .replace(/(?<=\bHe\s)(\w+)/, (w) => {
+      if (tense === 'Present') return `${w}(s)`;
+      return w;
+    });
 }
 
 function convert1p(verb: string) {

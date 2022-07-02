@@ -39,8 +39,7 @@ const ignoredENWords = [
 ];
 
 const usePhraseList = (currentWord: Word) => {
-  console.log(currentWord);
-  const { spanish, english } = currentWord;
+  const { spanish, english } = currentWord || {};
 
   const ESKeywords = useMemo(
     () =>

@@ -162,3 +162,13 @@ html, body {
 .meta .right-side {
   justify-items: flex-end;
 }
+
+.congrats-title {
+  font-size: 55px;
+  font-weight: 400;
+  margin-bottom: 0px;
+}
+
+.congrats-description {
+  font-size: 26px;
+}

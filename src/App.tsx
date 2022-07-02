@@ -1,5 +1,6 @@
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import './App.css';
+import Congrats from './Congrats';
 import { Dictionary, getWordlist, initWord, Word } from './dictionary';
 import MetaDisplay from './MetaDisplay';
 import { Phrase } from './phrases';
@@ -44,6 +45,7 @@ function App() {
     wordLimit: 50,
     phraseEnabled: true,
   });
+  const [showCongratulations, setShowCongratulations] = useState(false);
   const { getVerbList } = useVerbs();
 
   const phrase = usePhraseList(currentWord);
@@ -76,6 +78,7 @@ function App() {
       setLifelinesUsed(0);
       setPhraseList([]);
       setIsPhrase(false);
+      setShowCongratulations(false);
       showNewWord(forceWordList);
     },
     [showNewWord]
@@ -87,6 +90,7 @@ function App() {
       const { mode, wordLimit } = newSettings;
       const newWordList =
         mode === 'word' ? getWordlist(wordLimit) : getVerbList(newSettings);
+      if (!newWordList.length) return;
       setCurrentWordList(newWordList);
       resetGame(newWordList);
     },
@@ -96,7 +100,8 @@ function App() {
   const [firstUnknownIndex, setfirstUnknownIndex] = useState(0);
 
   const win = () => {
-    console.log('CONGRATS');
+    ding.current.play();
+    setShowCongratulations(true);
   };
 
   const roundCompleted = (forceUsedLifelines = false) => {
@@ -211,6 +216,13 @@ function App() {
 
   return (
     <>
+      {showCongratulations && (
+        <Congrats
+          words={settings.wordLimit}
+          lifelines={lifelinesUsed}
+          onNewGame={() => onSettingsChanged(settings)}
+        />
+      )}
       <Settings
         isOpen={isSettingsDrawerOpen}
         onChange={onSettingsChanged}

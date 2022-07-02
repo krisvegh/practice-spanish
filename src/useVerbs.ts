@@ -110,8 +110,6 @@ const useVerbs = () => {
         );
       });
 
-      console.log(filteredVerbs, filteredVerbs.length);
-
       const words: Word[] = filteredVerbs.map((verb) => {
         const person = getRandomPerson();
         return {
