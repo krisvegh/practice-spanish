@@ -116,7 +116,6 @@ function App() {
         return;
       }
       setCurrentWordList(newWordList);
-      setWordListLength(newWordList.length);
       setPhraseList((oldList) =>
         oldList.filter((phrase) => phrase.english !== currentWord.english)
       );
