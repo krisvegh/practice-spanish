@@ -133,6 +133,7 @@ html, body {
   transition: transform .2s;
   box-shadow: -8px 0px 10px #e5e5e5 inset;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 .settings.open {
