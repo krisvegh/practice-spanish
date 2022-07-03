@@ -24,15 +24,15 @@ export const getEnglishVerb = (
 
 function convert2s(verb: string) {
   return verb
-    .replaceAll('I ', 'You ')
-    .replaceAll(' was ', ' were ')
-    .replaceAll(' am ', ' are ');
+    .replaceAll(/\bI\b/g, 'You')
+    .replaceAll(/\bwas\b/g, 'were')
+    .replaceAll(/\bam\b/g, 'are');
 }
 
 function convert3s(verb: string, tense: string) {
   return verb
-    .replace('I ', 'He ')
-    .replaceAll(' am ', ' is ')
+    .replace(/\bI\b/g, 'He')
+    .replaceAll(/\bam\b/g, 'is')
     .replace(/(?<=\bHe\s)(\w+)/, (w) => {
       if (tense === 'Present') return `${w}(s)`;
       return w;
@@ -41,21 +41,21 @@ function convert3s(verb: string, tense: string) {
 
 function convert1p(verb: string) {
   return verb
-    .replaceAll('I ', 'We ')
-    .replaceAll(' was ', ' were ')
-    .replaceAll(' am ', ' are ');
+    .replaceAll(/\bI\b/g, 'We')
+    .replaceAll(/\bwas\b/g, 'were')
+    .replaceAll(/\bam\b/g, 'are');
 }
 
 function convert2p(verb: string) {
   return verb
-    .replaceAll('I ', 'You (all) ')
-    .replaceAll(' was ', ' were ')
-    .replaceAll(' am ', ' are ');
+    .replaceAll(/\bI\b/g, 'You (all)')
+    .replaceAll(/\bwas\b/g, 'were')
+    .replaceAll(/\bam\b/g, 'are');
 }
 
 function convert3p(verb: string) {
   return verb
-    .replaceAll('I ', 'They ')
-    .replaceAll(' was ', ' were ')
-    .replaceAll(' am ', ' are ');
+    .replaceAll(/\bI\b/g, 'They')
+    .replaceAll(/\bwas\b/g, 'were')
+    .replaceAll(/\bam\b/g, 'are');
 }

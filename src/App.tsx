@@ -32,9 +32,9 @@ function App() {
   const [currentWordList, setCurrentWordList] = useState<Dictionary>(
     getWordlist(50)
   );
+  const [wordListLength, setWordListLength] = useState(50);
   const [lifelinesUsed, setLifelinesUsed] = useState(0);
-  const [lifelinesUsedInThisRound, setlifelinesUsedInThisRound] =
-    useState(false);
+  const lifelinesUsedInThisRound = useRef(false);
   const [phraseList, setPhraseList] = useState<Phrase[]>([]);
   const [isPhrase, setIsPhrase] = useState(false);
   const [isSettingsDrawerOpen, setIsSettingsDrawerOpen] = useState(false);
@@ -44,6 +44,7 @@ function App() {
     tenses: ['Present'],
     wordLimit: 50,
     phraseEnabled: true,
+    specificVerb: '',
   });
   const [showCongratulations, setShowCongratulations] = useState(false);
   const { getVerbList } = useVerbs();
@@ -52,7 +53,7 @@ function App() {
 
   const resetRound = () => {
     setInputValue('');
-    setlifelinesUsedInThisRound(false);
+    lifelinesUsedInThisRound.current = false;
   };
 
   const showNewWord = useCallback(
@@ -92,6 +93,7 @@ function App() {
         mode === 'word' ? getWordlist(wordLimit) : getVerbList(newSettings);
       if (!newWordList.length) return;
       setCurrentWordList(newWordList);
+      setWordListLength(newWordList.length);
       resetGame(newWordList);
     },
     [getVerbList, resetGame]
@@ -105,21 +107,22 @@ function App() {
   };
 
   const roundCompleted = (forceUsedLifelines = false) => {
-    if (!lifelinesUsedInThisRound) {
-      const newWordList = currentWordList.filter(
-        (word) => word.english !== currentWord?.english
-      );
+    const newWordList = currentWordList.filter(
+      (word) => word.english !== currentWord?.english
+    );
+    if (!lifelinesUsedInThisRound.current) {
       if (newWordList.length === 0) {
         win();
         return;
       }
       setCurrentWordList(newWordList);
+      setWordListLength(newWordList.length);
       setPhraseList((oldList) =>
         oldList.filter((phrase) => phrase.english !== currentWord.english)
       );
     }
     if (
-      (lifelinesUsedInThisRound || forceUsedLifelines) &&
+      (lifelinesUsedInThisRound.current || forceUsedLifelines) &&
       settings.phraseEnabled
     ) {
       if (phrase) {
@@ -127,8 +130,9 @@ function App() {
       }
     }
     ding.current.play();
+    lifelinesUsedInThisRound.current = false;
     setTimeout(() => {
-      showNewWord();
+      showNewWord(newWordList);
     }, 1000);
   };
 
@@ -148,9 +152,9 @@ function App() {
   };
 
   const lifeLine = () => {
-    if (!lifelinesUsedInThisRound) {
+    if (!lifelinesUsedInThisRound.current) {
       setLifelinesUsed((prev) => ++prev);
-      setlifelinesUsedInThisRound(true);
+      lifelinesUsedInThisRound.current = true;
     }
   };
 
@@ -211,14 +215,14 @@ function App() {
   // On game start, set first word
   useEffect(() => {
     showNewWord();
-    //eslint-disable-next-line
+    // eslint-disable-next-line
   }, []);
 
   return (
     <>
       {showCongratulations && (
         <Congrats
-          words={settings.wordLimit}
+          words={wordListLength}
           lifelines={lifelinesUsed}
           onNewGame={() => onSettingsChanged(settings)}
         />
@@ -232,7 +236,7 @@ function App() {
           {isSettingsDrawerOpen ? 'Close' : 'Settings'}
         </p>
         <div className="info">
-          <p>{`Remaining words: ${currentWordList.length}/${settings.wordLimit}`}</p>
+          <p>{`Remaining words: ${currentWordList.length}/${wordListLength}`}</p>
           <p>{`Lifeline used: ${lifelinesUsed}`}</p>
         </div>
         <p className="english">

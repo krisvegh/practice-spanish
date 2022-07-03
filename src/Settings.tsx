@@ -9,6 +9,7 @@ export interface SettingsParams {
   tenses: Tense[];
   wordLimit: number;
   phraseEnabled: boolean;
+  specificVerb: string;
 }
 
 interface Props {
@@ -22,38 +23,55 @@ const Settings: FC<Props> = ({ isOpen, onChange }) => {
   const [tenses, setTenses] = useState<Tense[]>(['Present']);
   const [wordLimit, setWordLimit] = useState(50);
   const [phraseEnabled, setphraseEnabled] = useState(true);
+  const [specificVerb, setSpecificVerb] = useState<string>('');
+
+  const onChangeHandler = (setting: Partial<SettingsParams>) => {
+    onChange &&
+      onChange({
+        mode,
+        mood,
+        tenses,
+        wordLimit,
+        phraseEnabled,
+        specificVerb,
+        ...setting,
+      });
+  };
 
   const modeChangeHandler = (mode: Modes) => {
     setMode(mode);
-    onChange && onChange({ mode, mood, tenses, wordLimit, phraseEnabled });
+    onChangeHandler({ mode });
   };
 
   const moodChangeHandler = (mood: Mood) => {
     setMood(mood);
-    onChange && onChange({ mode, mood, tenses, wordLimit, phraseEnabled });
+    onChangeHandler({ mood });
   };
 
   const wordLimitChangeHandler = (wordLimit: number) => {
     setWordLimit(wordLimit);
-    onChange && onChange({ mode, mood, tenses, wordLimit, phraseEnabled });
+    onChangeHandler({ wordLimit });
   };
 
-  const phraseSettingHandler = (isEnabled: boolean) => {
-    setphraseEnabled(isEnabled);
-    onChange && onChange({ mode, mood, tenses, wordLimit, phraseEnabled });
+  const phraseSettingHandler = (phraseEnabled: boolean) => {
+    setphraseEnabled(phraseEnabled);
+    onChangeHandler({ phraseEnabled });
+  };
+
+  const specificWordHandler = (specificVerb: string) => {
+    setSpecificVerb(specificVerb);
+    onChangeHandler({ specificVerb });
   };
 
   const toggleTense = (tense: Tense) => {
     setTenses((oldTenses) => {
       if (oldTenses.includes(tense)) {
         const newTenses = oldTenses.filter((t) => t !== tense);
-        onChange &&
-          onChange({ mood, mode, wordLimit, tenses: newTenses, phraseEnabled });
+        onChangeHandler({ tenses: newTenses });
         return newTenses;
       }
       const newTenses = [...oldTenses, tense];
-      onChange &&
-        onChange({ mood, mode, wordLimit, tenses: newTenses, phraseEnabled });
+      onChangeHandler({ tenses: newTenses });
       return newTenses;
     });
   };
@@ -104,6 +122,14 @@ const Settings: FC<Props> = ({ isOpen, onChange }) => {
         className={mode === 'verbs' ? '' : 'disabled'}
         style={{ display: 'flex', flexDirection: 'column' }}
       >
+        <div>
+          <p>Practice specific verb:</p>
+          <input
+            type="text"
+            value={specificVerb}
+            onChange={(e) => specificWordHandler(e.target.value)}
+          />
+        </div>
         <div onChange={(e) => moodChangeHandler((e.target as any).value)}>
           <p>Mood:</p>
           <div style={{ marginBottom: '10px' }}>

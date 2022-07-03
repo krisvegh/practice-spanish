@@ -85,13 +85,9 @@ const useVerbs = () => {
   useEffect(() => {
     async function getData() {
       const response = await fetch('./verb_database.csv');
-      const reader = response.body?.getReader();
-      const result = await reader?.read(); // raw array
-      const decoder = new TextDecoder('utf-8');
-      const csv = decoder.decode(result?.value); // the csv text
-      const results = Papa.parse(csv, { header: true }); // object with { data, errors, meta }
-      const rows = results.data as Verb[]; // array of objects
-      setVerbs(rows);
+      const text = await response.text();
+      const { data } = Papa.parse<Verb>(text, { header: true });
+      setVerbs(data);
     }
     getData();
   }, []);
@@ -103,12 +99,36 @@ const useVerbs = () => {
 
   const getVerbList = useCallback(
     (settings: SettingsParams): Word[] => {
-      const { tenses, wordLimit, mood } = settings;
+      const { tenses, wordLimit, mood, specificVerb } = settings;
       const filteredVerbs = verbs.filter((verb) => {
         return (
           tenses.includes(verb.tense_english) && mood === verb.mood_english
         );
       });
+
+      const hasSpecificValue = Boolean(specificVerb.length);
+
+      const specificVerbs = hasSpecificValue
+        ? filteredVerbs.filter((verb) => {
+            return verb.infinitive === specificVerb;
+          })
+        : [];
+
+      const foundSpecificWord = Boolean(specificVerbs.length);
+
+      if (foundSpecificWord) {
+        const sWords: Word[] = specificVerbs
+          .map((verb) => {
+            return allPersons.map((person) => ({
+              english: getEnglishVerb(verb, person),
+              spanish: [verb[person]],
+              meta: { ...verb, person },
+            }));
+          })
+          .flat();
+
+        return sWords;
+      }
 
       const words: Word[] = filteredVerbs.map((verb) => {
         const person = getRandomPerson();
