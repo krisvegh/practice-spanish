@@ -30,13 +30,16 @@ function convert2s(verb: string) {
 }
 
 function convert3s(verb: string, tense: string) {
-  return verb
+  const v = verb
     .replace(/\bI\b/g, 'He')
     .replaceAll(/\bam\b/g, 'is')
-    .replace(/(?<=\bHe\s)(\w+)/, (w) => {
-      if (tense === 'Present') return `${w}(s)`;
-      return w;
-    });
+    .replaceAll(/\bhave\b/g, 'has');
+
+  if (tense === 'Present') {
+    return v.replace(/(\bHe\b\s)(\w+)(.*)/g, `$1$2s$3`);
+  } else {
+    return v;
+  }
 }
 
 function convert1p(verb: string) {

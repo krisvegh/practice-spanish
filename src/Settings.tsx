@@ -125,6 +125,7 @@ const Settings: FC<Props> = ({ isOpen, onChange }) => {
         <div>
           <p>Practice specific verb:</p>
           <input
+            placeholder="i.e.: poner"
             type="text"
             value={specificVerb}
             onChange={(e) => specificWordHandler(e.target.value)}
